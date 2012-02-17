@@ -4,5 +4,5 @@
 
 struct prec_assoc
 {
-
+}
 
