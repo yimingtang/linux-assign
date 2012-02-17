@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -16,9 +18,9 @@ void error_exit(int exit_code, const char *msg)
 {
 	fprintf(stderr,"error: ");
 	if(msg !=NULL)
-		fprintf(stderr,msg)
+		fprintf(stderr,msg);
 	else
-		fprintf(stderr,"unknown error,exit")
+		fprintf(stderr,"unknown error,exit");
 	exit(exit_code);	
 }
 

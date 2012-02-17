@@ -1,4 +1,4 @@
-#include <defs.h>
+#include "defs.h"
 #include <fnmatch.h>
 /* Here we use table driven programming
  * predicate & string pair

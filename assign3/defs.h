@@ -1,4 +1,5 @@
 #include <string.h>
+#include <stdio.h>
 #include <regex.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -95,5 +96,5 @@ boolean pred_perm (char *pathname, struct stat *stat_buf, struct predicate *pred
 boolean pred_uid (char *pathname, struct stat *stat_buf, struct predicate *pred_ptr);
 boolean pred_gid (char *pathname, struct stat *stat_buf, struct predicate *pred_ptr);
 
-char *find_pred_name (PFB pred_func);
+char *find_pred_name (PFUNC pred_func);
 

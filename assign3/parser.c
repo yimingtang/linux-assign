@@ -10,6 +10,6 @@ static struct parser_assoc const parser_table[]=
 {
     
 
-}
+};
 
 
