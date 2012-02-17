@@ -7,7 +7,7 @@ struct pred_assoc
 {
     PFUNC pred_func;
     char *pred_name;
-}
+};
 
 
 struct pred_assoc pred_table[]=
@@ -30,7 +30,7 @@ struct op_assoc
 {
     short type;
     char *type_name;
-}；
+};
 
 
 
