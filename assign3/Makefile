@@ -1,9 +1,9 @@
 CC = gcc
-OBJS = parser.o find.o pred.o tree.o
+OBJS = parser.o find.o pred.o
 TARGET = myfind
 CFLAGS= -Wall
 
-myfind: find.o parser.o pred.o tree.o
+myfind: find.o parser.o pred.o
 	$(CC) $(OBJS) -o $(TARGET)
 find.o: find.c
 	$(CC) $(CFLAGS) -c $<
@@ -11,8 +11,6 @@ find.o: find.c
 parser.o: parser.c
 	$(CC) $(CFLAGS) -c $<
 pred.o: pred.c
-	$(CC) $(CFLAGS) -c $<
-tree.o: tree.c
 	$(CC) $(CFLAGS) -c $<
 
 clean:

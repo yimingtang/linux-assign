@@ -1,38 +1,32 @@
 #include "defs.h"
-#include <fnmatch.h>
-/* Here we use table driven programming
- * predicate & string pair
- */
-struct pred_assoc
+
+struct predicate *get_new_pred()
 {
-    PFUNC pred_func;
-    char *pred_name;
-};
 
+    struct predicate *new_pred; 
+    if(pred_list == NULL){
+        pred_list = (struct predicate *)malloc (sizeof(struct predicate));
+        last_pred =pred_list;
+    }else{
+        new_pred = (struct predicate *)malloc (sizeof(struct predicate));
+        last_pred->pred_next=new_pred;
+        last_pred = new_pred;
+    } 
 
-struct pred_assoc pred_table[]=
+    last_pred->pred_func = NULL;
+    last_pred->pred_next = NULL;
+    last_pred->args.str = NULL;
+    return last_pred;
+}
+
+struct predicate * insert_pred(boolean (*pred_func)(/* ??? */))
 {
-    {pred_name,"name  "},
-    {pred_type,"type  "},
-    {pred_size,"size  "},
-    {pred_atime,"atime "},
-    {pred_ctime,"ctime "},
-    {pred_mtime,"mtime "},
-    {pred_regex,"regex "},
-    {pred_perm,"perm  "},
-    {pred_uid,"uid   "},
-    {pred_gid,"gid   "},
-    {0,"none   "},
-};
-
-
-struct op_assoc
-{
-    short type;
-    char *type_name;
-};
-
-
+    struct predicate * p;
+    p = get_new_pred();
+    p->pred_func = pred_func;
+    p->args.str = NULL;
+    return p; 
+}
 
 boolean pred_name(char *pathname,struct stat *stat_buf, struct predicate *pred_ptr)
 {
