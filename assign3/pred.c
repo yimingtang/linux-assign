@@ -28,54 +28,40 @@ struct predicate * insert_pred(boolean (*pred_func)(/* ??? */))
     return p; 
 }
 
-boolean pred_name(char *pathname,struct stat *stat_buf, struct predicate *pred_ptr)
+/*pred.c*/
+boolean pred_name (struct predicate *pred_ptr,struct dirent *entry)
+{
+    char *name = pred_ptr->args.str;
+    return fnmatch(name,entry->d_name,0)==0;
+
+}
+boolean pred_type (struct predicate *pred_ptr,struct dirent *entry)
 {
 
 }
-
-boolean pred_atime(char *pathname,struct stat *stat_buf, struct predicate *pred_ptr)
+boolean pred_size (struct predicate *pred_ptr,struct dirent *entry)
 {
-
-
 }
-
-boolean pred_ctime(char *pathname,struct stat *stat_buf, struct predicate *pred_ptr)
+boolean pred_atime (struct predicate *pred_ptr,struct dirent *entry)
 {
 
 }
-
-boolean pred_mtime(char *pathname,struct stat *stat_buf, struct predicate *pred_ptr)
+boolean pred_ctime (struct predicate *pred_ptr,struct dirent *entry)
+{
+}
+boolean pred_mtime (struct predicate *pred_ptr,struct dirent *entry)
 {
 
 }
-
-boolean pred_size(char *pathname,struct stat *stat_buf, struct predicate *pred_ptr)
+boolean pred_regex (struct predicate *pred_ptr,struct dirent *entry)
 {
 
 }
-
-boolean pred_type(char *pathname,struct stat *stat_buf, struct predicate *pred_ptr)
+boolean pred_perm (struct predicate *pred_ptr,struct dirent *entry)
 {
 
 }
-
-boolean pred_perm(char *pathname,struct stat *stat_buf, struct predicate *pred_ptr)
+boolean pred_uid (struct predicate *pred_ptr,struct dirent *entry)
 {
 
 }
-
-boolean pred_regex(char *pathname,struct stat *stat_buf, struct predicate *pred_ptr)
-{
-
-}
-
-boolean pred_uid(char *pathname,struct stat *stat_buf, struct predicate *pred_ptr)
-{
-
-}
-
-boolean pred_gid(char *pathname,struct stat *stat_buf, struct predicate *pred_ptr)
-{
-
-}
-

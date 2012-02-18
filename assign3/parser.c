@@ -62,7 +62,6 @@ static boolean parse_name(char **argv,int *arg_ptr)
         return false;
     pred = insert_pred(pred_name);
     pred->args.str = argv[*arg_ptr];
-    printf("arg: %s \n",pred->args.str);
     (*arg_ptr)++;
     return true;
 }

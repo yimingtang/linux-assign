@@ -3,6 +3,7 @@ OBJS = parser.o find.o pred.o
 TARGET = myfind
 CFLAGS= -Wall
 
+
 myfind: find.o parser.o pred.o
 	$(CC) $(OBJS) -o $(TARGET)
 find.o: find.c

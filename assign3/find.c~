@@ -146,7 +146,7 @@ void _traverse(char *dir,struct predicate *pred, int depth, int mindepth, int ma
         lstat(entry->d_name, &statbuf);
         /* if entry is directory */
         if(S_ISDIR(statbuf.st_mode)) {
-            char *long_name = _long_name(dir, entry->d_name);
+            char *long_name = build_long_name(dir, entry->d_name);
             /* Recurse at a new indent level */
             _traverse(long_name, pred, depth+1, mindepth, maxdepth);
             free(long_name);
@@ -175,6 +175,7 @@ void traverse(char *dir,struct predicate *pred, int min_depth, int max_depth)
     char *dup2 = strdup(dir);
     char *dir_name = dirname(dup1);
     char *base_name = basename(dup2);
+    printf("dir:%s, base:%s \n",dir_name,base_name);
     chdir(dir_name);
     strncpy(entry->d_name, base_name, 256);
     if(S_ISREG(statbuf.st_mode)) {
@@ -196,13 +197,14 @@ void traverse(char *dir,struct predicate *pred, int min_depth, int max_depth)
     }
 
     if(depth >= min_depth && pred_test(pred, entry)) {
+        /* TBD: do specified action */
         printf("%s/%s\n", dir_name, base_name);
     }
 
     /* if is directory, traverse it */
     if(DT_DIR == entry->d_type)
         _traverse(dir, pred, depth+1, mindepth, maxdepth);
-    printf("operation completed.\n");
+
     free(dup2);
     free(dup1);
     free(entry);
@@ -256,14 +258,8 @@ int main(int argc, const char *argv[])
         }
     }   
     /* search file    */
-#ifdef DEBUG
-    if(dir_list != NULL)
-        print_dir_list();
-    if(pred_list != NULL)
-        print_pred_list();
-#endif
-    if(dir_list == NULL)
-        insert_dir(".");
+    print_dir_list();
+    print_pred_list();
     cur_dir = dir_list;
 
     while(cur_dir->dir_name != NULL){

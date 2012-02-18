@@ -57,17 +57,23 @@ struct	predicate
     }args;
 };
 
+struct dir{
+    char *dir_name;
+    struct dir *next_dir;
+};
+
+
 /*pred.c*/
-boolean pred_name (char *pathname, struct stat *stat_buf, struct predicate *pred_ptr);
-boolean pred_type (char *pathname, struct stat *stat_buf, struct predicate *pred_ptr);
-boolean pred_size (char *pathname, struct stat *stat_buf, struct predicate *pred_ptr);
-boolean pred_atime (char *pathname, struct stat *stat_buf, struct predicate *pred_ptr);
-boolean pred_ctime (char *pathname, struct stat *stat_buf, struct predicate *pred_ptr);
-boolean pred_mtime (char *pathname, struct stat *stat_buf, struct predicate *pred_ptr);
-boolean pred_regex (char *pathname, struct stat *stat_buf, struct predicate *pred_ptr);
-boolean pred_perm (char *pathname, struct stat *stat_buf, struct predicate *pred_ptr);
-boolean pred_uid (char *pathname, struct stat *stat_buf, struct predicate *pred_ptr);
-boolean pred_gid (char *pathname, struct stat *stat_buf, struct predicate *pred_ptr);
+boolean pred_name (struct predicate *pred_ptr,struct dirent *entry);
+boolean pred_type (struct predicate *pred_ptr,struct dirent *entry);
+boolean pred_size (struct predicate *pred_ptr,struct dirent *entry);
+boolean pred_atime (struct predicate *pred_ptr,struct dirent *entry);
+boolean pred_ctime (struct predicate *pred_ptr,struct dirent *entry);
+boolean pred_mtime (struct predicate *pred_ptr,struct dirent *entry);
+boolean pred_regex (struct predicate *pred_ptr,struct dirent *entry);
+boolean pred_perm (struct predicate *pred_ptr,struct dirent *entry);
+boolean pred_uid (struct predicate *pred_ptr,struct dirent *entry);
+boolean pred_gid (struct predicate *pred_ptr,struct dirent *entry);
 
 /*parser.c*/
 PFUNC find_parser (char *search_name);
