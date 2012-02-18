@@ -3,13 +3,13 @@
 #include <unistd.h>
 #include <regex.h>
 #include <stdlib.h>
-#include <time.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fnmatch.h>
 #include <dirent.h>
 #include <pwd.h>
 #include <limits.h>
+#include <time.h>
 
 typedef	int  boolean;
 #define true    1
@@ -27,11 +27,7 @@ enum comparison_type
     COMP_EQ
 };
 
-struct time_val
-{
-    enum comparison_type kind;
-    unsigned long value;
-};
+
 
 struct size_val
 {
@@ -47,13 +43,12 @@ struct	predicate
     union
     {
         char *str;  //fstype lname,name,path
-        struct time_val time;   // atime ctime mtime
+        int time;   // atime ctime mtime
         struct size_val size;   // size
         uid_t uid;  //user
         gid_t gid;  //group
         unsigned long perm; //perm
         unsigned long type; //type
-        FILE *stream;   //fprint...
     }args;
 };
 

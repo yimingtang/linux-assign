@@ -47,7 +47,16 @@ struct dir * insert_dir(char *dir_name)
 
 }
 
-
+void free_dir_list()
+{
+    struct dir *next;
+    while(dir_list != NULL){
+        next = dir_list->next_dir;
+        free(dir_list->dir_name);
+        free(dir_list);
+        dir_list=next;
+    }
+}
 
 
 
@@ -219,21 +228,21 @@ int main(int argc, const char *argv[])
     last_dir = NULL;
     struct dir *cur_dir;
 
-	if (argc<2) 
-		error_exit(1,USAGE);
+    if (argc<2) 
+        error_exit(1,USAGE);
 
-	int i;
-	/*Find where in argv the predicates begin*/
-	for (i = 1; i < argc && ('-' != argv[i][0]); i++) {
+    int i;
+    /*Find where in argv the predicates begin*/
+    for (i = 1; i < argc && ('-' != argv[i][0]); i++) {
         dir_name = argv[i];
         insert_dir(dir_name);
-	}
+    }
     
     if (i == argc) {
         error_exit(1,"no predicates.");
     }
 	
-	maxdepth = INT_MAX;
+    maxdepth = INT_MAX;
     mindepth = -1;
 
     /*
@@ -276,6 +285,8 @@ int main(int argc, const char *argv[])
     
 
     /*free memory*/
+    free_dir_list();
+    /*free_pred_list();*/
 
 	return 0;
 }
