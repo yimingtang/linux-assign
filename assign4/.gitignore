@@ -1,3 +1,10 @@
+# 
 *.o
 *.swp
+
+# c-tags
+tags
+
+# ignore db files
+db
 
