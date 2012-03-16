@@ -1,6 +1,7 @@
 #include "error.h"
-
 #include <stdio.h>
+
+static void print_msg(const char *msg, char *extra);
 
 void error_exit(int exit_code, const char * msg, char *extra)
 {

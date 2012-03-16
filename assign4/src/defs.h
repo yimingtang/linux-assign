@@ -1,12 +1,7 @@
 #ifndef DEFS_H
 #define DEFS_H
 
-
-typedef int bool;
-#define true    1;
-#define false   0;
-
-#define MAX_PARAMS_NUM 5;
+#define MAX_PARAMS_NUM 5
 
 typedef enum {
     SUCCESS,
@@ -21,12 +16,20 @@ typedef enum {
     DISCONNET,
 } request_type;
 
+/*
+ * 1. check the type of request;
+ * 2. get the number of params;
+ * 3. read params;
+ */
 typedef struct _request {
     request_type type;
     int param_num;
     char *params[MAX_PARAMS_NUM];
 } request;
 
+/*
+ * all responses have a status code and a result 
+ */
 typedef struct _reponse {
     response_status status;
     char *result;
