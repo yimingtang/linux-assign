@@ -30,10 +30,10 @@ typedef struct _request {
 /*
  * all responses have a status code and a result 
  */
-typedef struct _reponse {
+typedef struct _response {
     response_status status;
     char *result;
     int rs_len;
-} reponse;
+} response;
 
 #endif

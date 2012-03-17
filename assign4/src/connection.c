@@ -1,10 +1,10 @@
 #include "connection.h"
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-static FILE *read_file;
-static FILE *write_file;
+
+FILE *read_file;
+FILE *write_file;
 
 static response resp;
 static request req; 
@@ -16,6 +16,7 @@ char buffer[BUFF_SIZE];
 bool send_request(request_type type, int param_num, char *params[])
 {
     fprintf(write_file, "%d %d ", type, param_num);
+    int i;
     for (i = 0; i < param_num; i++) {
         fprintf(write_file, "%s ", params[i]);
     }
@@ -34,7 +35,7 @@ bool send_response(response_status status, int rs_len, char *rs)
 response * recv_response()
 {
 
-
+    return &resp;
 }
 
 request * recv_request()
@@ -51,6 +52,6 @@ request * recv_request()
         fscanf(read_file, "%s", buf_ptr);
         buf_ptr = buf_ptr + strlen(buf_ptr) + 1;
     }
-    fpurge(read_file);
+    fflush(read_file);
     return &req;
 }
