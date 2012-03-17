@@ -3,6 +3,7 @@
 #include "error.h"
 #include <stdio.h>
 #include <string.h>
+#include "connection.h"
 
 static void handle_init();
 static void handle_register();
@@ -99,17 +100,14 @@ static void handle_register()
     params[0] = username;
     params[1] = passwd;
 
-    printf("username: %s\npassword: %s\n",username,passwd);
-
-    // send_request(REGISTER, 2, params);
-    // response * resp = get_response();
-    // if (resp->status == SUCCESS) {
-    //     status = S_VERIFIED;
-    // } else {
-    //     fputs("VERIFIED ERROR", stdout);
-    //     status = S_INIT;
-    // }
-    status = S_INIT;
+    send_request(REGISTER, 2, params);
+    response * rs = recv_response();
+    if (rs->status == SUCCESS) {
+        status = S_VERIFIED;
+    } else {
+        fputs("VERIFIED ERROR", stdout);
+        status = S_INIT;
+    }
 }
 
 static void handle_login()

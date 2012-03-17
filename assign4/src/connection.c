@@ -27,14 +27,26 @@ bool send_request(request_type type, int param_num, char *params[])
 bool send_response(response_status status, int rs_len, char *rs)
 {
     fprintf(write_file, "%d %d ", status, rs_len);
-    fprintf(write_file, "%s", rs);
+    fwrite(rs, sizeof(char), rs_len, write_file);
     fflush(write_file);
-    return true;
+    return 0;
 }
 
 response * recv_response()
 {
-
+    int status;
+    // free resp
+    if (resp.rs_len > 0) {
+        free(resp.result);
+    }   
+    fscanf(read_file, "%d", &status); 
+    resp.status= (response_status)status;
+    fscanf(read_file, "%d", &(resp.rs_len)); 
+    if (resp.rs_len > 0) {
+        resp.result = (char *)(malloc(sizeof(char) * resp.rs_len));
+        fread(resp.result, sizeof(char), resp.rs_len, read_file);
+    }
+    //fpurge(read_file);
     return &resp;
 }
 
@@ -52,6 +64,6 @@ request * recv_request()
         fscanf(read_file, "%s", buf_ptr);
         buf_ptr = buf_ptr + strlen(buf_ptr) + 1;
     }
-    fflush(read_file);
+    //fflush(read_file);
     return &req;
 }

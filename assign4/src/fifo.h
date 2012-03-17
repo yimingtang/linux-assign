@@ -17,7 +17,7 @@ int init_server();
 /*
  * connect to the server, and dup file descriptors
  */
-int listen_client();
+int listen_client(int fd);
 /*
  * setup connection between client and server, dup file descriptors
  */

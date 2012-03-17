@@ -13,7 +13,7 @@ typedef enum {
     LOGIN,
     QUERY,
     ORDER,
-    DISCONNET,
+    DISCONNECT,
 } request_type;
 
 /*
