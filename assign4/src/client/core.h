@@ -13,4 +13,6 @@ typedef enum
 	S_EXIT
 }C_Status;
 
+void start_client();
+
 #endif

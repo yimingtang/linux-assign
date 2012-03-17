@@ -2,6 +2,7 @@
 #include "defs.h"
 #include "error.h"
 #include <stdio.h>
+#include <string.h>
 
 static void handle_init();
 static void handle_register();
@@ -124,17 +125,17 @@ static void handle_login()
 static void handle_query()
 {
     fputs("\n================== QUERY ========================\n\n", stdout);
-    exit(0);
+    error_exit(1, "query",NULL);
 }
 static void handle_exit()
 {
     fputs("\n================== EXIT ==========================\n\n", stdout);
-    exit(0);
+    error_exit(1, "exit",NULL);
 }
 static void handle_order()
 {
     fputs("\n================== ORDER =========================\n\n", stdout);
-    exit(0);
+    error_exit(1, "ORDER",NULL);
 }
 static void handle_verified()
 {
@@ -176,6 +177,6 @@ static void get_str(char *prompts, char *result)
 static void read_flush()
 {
     char c;
-    while(c = getchar() != '\n')
+    while((c = getchar()) != '\n')
         ;
 }
