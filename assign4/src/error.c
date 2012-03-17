@@ -19,7 +19,7 @@ void error_msg(const char *msg, char *extra)
 
 static void print_msg(const char *msg, char *extra)
 {
-    fprintf(stderr, "Oops, we encountered an error:");
+    fprintf(stderr, "Oops, we encountered an error:\n");
     if (extra == NULL)
         fprintf(stderr, msg);
     else

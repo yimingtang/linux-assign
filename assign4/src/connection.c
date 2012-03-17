@@ -1,6 +1,9 @@
 #include "connection.h"
 #include <stdlib.h>
 #include <string.h>
+#include <stdio_ext.h>
+
+
 
 
 FILE *read_file;
@@ -46,7 +49,8 @@ response * recv_response()
         resp.result = (char *)(malloc(sizeof(char) * resp.rs_len));
         fread(resp.result, sizeof(char), resp.rs_len, read_file);
     }
-    //fpurge(read_file);
+    //fflush(read_file);
+    __fpurge(read_file);
     return &resp;
 }
 
@@ -64,6 +68,5 @@ request * recv_request()
         fscanf(read_file, "%s", buf_ptr);
         buf_ptr = buf_ptr + strlen(buf_ptr) + 1;
     }
-    //fflush(read_file);
     return &req;
 }

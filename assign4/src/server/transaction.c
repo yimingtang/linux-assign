@@ -2,17 +2,18 @@
 #include "defs.h"
 #include "connection.h"
 #include "common.h"
-
-
+#include "database.h"
+#include <string.h>
+#include <stdlib.h>
 
 static void handle_login(request * req);
 static void handle_register(request * req);
 static void handle_order(request * req);
 static void handle_query(request * req);
-static void handle_exit(request * req);
+static void handle_exit();
 
 int start_service() {
-  //connect_db();
+  connect_db();
   while (true) {
     request * req = recv_request();
     switch(req->type) {
@@ -23,9 +24,7 @@ int start_service() {
         handle_register(req);
         break;
       case DISCONNECT:
-        fprintf(stderr, "QUIT\n");
-       // state = IDLE;
-       // close_db();
+        handle_exit();
         return 0;
       case QUERY:
         handle_query(req);
@@ -44,24 +43,56 @@ int start_service() {
 
 static void handle_login(request * req)
 {
+    bool rs = has_user(req->params[0], req->params[1]);
+    response_status status = FAILED;
+    if (rs) 
+      status = SUCCESS;
+    send_response(status, 0, NULL);
 }
+
 static void handle_register(request * req)
 {
-    //bool rs = register_user(request->params[0], request->params[1]);
-    //response_status status;
-    fprintf(stderr, "%s %s\n", req->params[0],req->params[1] );
-    send_response(SUCCESS, 0, NULL);
-
+    fprintf(stderr, "username: %s\npassword: %s\n", req->params[0],req->params[1] );
+    bool rs = db_register(req->params[0], req->params[1]);
+    response_status status = FAILED;
+    if(rs == true)
+        status = SUCCESS;
+    send_response(status, 0, NULL);
 }
+
+
 static void handle_order(request * req)
 {
+    int status;
+    int ticket_id = atoi(req->params[0]);
+    bool rs = db_ticket_order(ticket_id);
+    if (rs) {
+        status = SUCCESS;
+    } else {
+        status = FAILED;
+    }
+    send_response(status, 0, NULL);
 
 }
+
 static void handle_query(request * req)
 {
-
+    char ** dbr = 0;
+    int row, column;
+    char buf[4096];
+    char * p = buf;
+    int i;
+    db_query_ticket(&dbr, &row, &column, req->params[0], req->params[1]);  
+    for (i = column; i < (row + 1) * column; i++) {
+        sprintf(p, "%s ", dbr[i]); 
+        p += strlen(dbr[i]) + 1;
+    }
+    send_response(SUCCESS, strlen(buf) + 1, buf);
+    release_dbr(dbr);
 }
+
 static void handle_exit(request * req)
 {
-
+    fprintf(stderr, "DISCONNECT\n");
+    close_db();
 }

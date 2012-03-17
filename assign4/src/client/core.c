@@ -29,7 +29,7 @@ void start_client() {
       case S_EXIT:
         handle_exit();
         return;
-      case LOGIN:
+      case S_LOGIN:
         handle_login();
         break;
       case S_REGISTER:
@@ -103,9 +103,9 @@ static void handle_register()
     send_request(REGISTER, 2, params);
     response * rs = recv_response();
     if (rs->status == SUCCESS) {
-        status = S_VERIFIED;
+        status = S_LOGIN;
     } else {
-        fputs("VERIFIED ERROR", stdout);
+        fputs("Can't register. perhaps: already exists", stdout);
         status = S_INIT;
     }
 }
@@ -118,28 +118,77 @@ static void handle_login()
     fputs("Please enter your username and password.\n", stdout);
     get_str("username: ", username);
     get_str("password: ", passwd);
-    status = S_VERIFIED;
+    char * params[2];
+    params[0] = username;
+    params[1] = passwd;
+
+    send_request(LOGIN, 2, params);
+    response * rs = recv_response();
+    if (rs->status == SUCCESS) {
+        status = S_VERIFIED;
+    } else {
+        fputs("Can't LOGIN. perhaps: username or password wrong", stdout);
+        status = S_INIT;
+    }
 }
 static void handle_query()
 {
+    char from_station[32];
+    char to_station[32];
     fputs("\n================== QUERY ========================\n\n", stdout);
-    error_exit(1, "query",NULL);
+    get_str("from: ", from_station);
+    get_str("to: ", to_station);
+
+    char * params[2];
+    params[0] = from_station;
+    params[1] = to_station;
+
+    send_request(QUERY, 2, params);
+    response * rs = recv_response();
+    printf("length: %d\n",rs->rs_len );
+    if (rs->status == SUCCESS) {
+        char *data = strtok(rs->result, " "); 
+        fprintf(stdout, "\tid\tform\t\tto\t\tprice\tdays_left\n");
+        while(data != NULL) {
+            fprintf(stdout, "\t%s", data);
+            data = strtok(NULL, " ");
+        }
+        fputc('\n',stdout);
+    }else{
+        error_msg("query error",NULL);
+    }
+
+    status = S_VERIFIED;
+    
 }
 static void handle_exit()
 {
     fputs("\n================== EXIT ==========================\n\n", stdout);
-    error_exit(1, "exit",NULL);
+    send_request(DISCONNECT, 0, NULL);
 }
 static void handle_order()
 {
     fputs("\n================== ORDER =========================\n\n", stdout);
-    error_exit(1, "ORDER",NULL);
+    char ticket_id[8];
+    get_str("ticket_id: ", ticket_id);
+
+    char * params[1];
+    params[0] = ticket_id;
+
+    send_request(ORDER, 1, params);
+    response * rs = recv_response();
+    if (rs->status == SUCCESS) {
+        fputs("\n#############  ORDER SUCCESS ##############\n", stdout);
+    } else {
+        error_msg("order error",NULL);
+    }
+    status = S_VERIFIED;
 }
 static void handle_verified()
 {
     fputs("\n================== VERIFIED ======================\n\n", stdout);
     fputs("Welcome Back! Now, you can do the following things: \n", stdout);
-    fputs("    1. QUERT\n", stdout);
+    fputs("    1. QUERY\n", stdout);
     fputs("    2. ORDER\n", stdout);
     fputs("    3. EXIT\n", stdout);
     char c = get_choice();
