@@ -49,7 +49,6 @@ response * recv_response()
         resp.result = (char *)(malloc(sizeof(char) * resp.rs_len));
         fread(resp.result, sizeof(char), resp.rs_len, read_file);
     }
-    //fflush(read_file);
     __fpurge(read_file);
     return &resp;
 }

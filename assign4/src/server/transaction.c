@@ -39,8 +39,6 @@ int start_service() {
   return 0;
 }
 
-
-
 static void handle_login(request * req)
 {
     bool rs = has_user(req->params[0], req->params[1]);
@@ -87,7 +85,10 @@ static void handle_query(request * req)
         sprintf(p, "%s ", dbr[i]); 
         p += strlen(dbr[i]) + 1;
     }
-    send_response(SUCCESS, strlen(buf) + 1, buf);
+    int status = FAILED;
+    if (row>0)
+        status = SUCCESS;
+    send_response(status, strlen(buf) + 1, buf);
     release_dbr(dbr);
 }
 

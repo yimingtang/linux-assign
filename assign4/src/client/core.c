@@ -145,7 +145,6 @@ static void handle_query()
 
     send_request(QUERY, 2, params);
     response * rs = recv_response();
-    printf("length: %d\n",rs->rs_len );
     if (rs->status == SUCCESS) {
         char *data = strtok(rs->result, " "); 
         fprintf(stdout, "\tid\tform\t\tto\t\tprice\tdays_left\n");

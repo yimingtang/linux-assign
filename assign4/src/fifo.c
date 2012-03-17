@@ -116,5 +116,6 @@ int listen_client(int fd) {
 int close_connect() {
   fclose(read_file);
   fclose(write_file);
+  fprintf(stderr, "close connection\n" );
   return 0;
 }
