@@ -1,6 +1,8 @@
 #include "error.h"
 
+#include <unistd.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 static void print_msg(const char *msg, char *extra);
 
