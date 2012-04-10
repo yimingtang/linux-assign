@@ -10,6 +10,8 @@ static void handle_login(request * req);
 static void handle_register(request * req);
 static void handle_order(request * req);
 static void handle_query(request * req);
+static void handle_query_orders(request * req);
+static void handle_list_all_tickets(request * req);
 static void handle_exit();
 
 int start_service() {
@@ -17,23 +19,29 @@ int start_service() {
   while (true) {
     request * req = recv_request();
     switch(req->type) {
-      case LOGIN:
-        handle_login(req);
-        break;
-      case REGISTER:
-        handle_register(req);
-        break;
-      case DISCONNECT:
-        handle_exit();
-        return 0;
-      case QUERY:
-        handle_query(req);
-        break;
-      case ORDER:
-        handle_order(req);
-        break;
-      default:
-        break;
+        case LOGIN:
+            handle_login(req);
+            break;
+        case REGISTER:
+            handle_register(req);
+            break;
+        case DISCONNECT:
+            handle_exit();
+            return 0;
+        case QUERY:
+            handle_query(req);
+            break;
+        case QUERY_ORDER:
+            handle_query_orders(req);
+            break;
+        case LIST_ALL:
+            handle_list_all_tickets(req);
+            break;
+        case ORDER:
+            handle_order(req);
+            break;
+        default:
+            break;
     }
   }
   return 0;
@@ -96,4 +104,42 @@ static void handle_exit(request * req)
 {
     fprintf(stderr, "DISCONNECT\n");
     close_db();
+}
+
+static void handle_list_all_tickets(request * req)
+{
+    char ** dbr = 0;
+    int row, column;
+    char buf[4096];
+    char * p = buf;
+    int i;
+    db_list_all_tickets(&dbr, &row, &column);  
+    for (i = column; i < (row + 1) * column; i++) {
+        sprintf(p, "%s ", dbr[i]); 
+        p += strlen(dbr[i]) + 1;
+    }
+    int status = FAILED;
+    if (row>0)
+        status = SUCCESS;
+    send_response(status, strlen(buf) + 1, buf);
+    release_dbr(dbr);
+}
+
+static void handle_query_orders(request * req)
+{
+     char ** dbr = 0;
+    int row, column;
+    char buf[4096];
+    char * p = buf;
+    int i;
+    db_query_orders(&dbr, &row, &column);  
+    for (i = column; i < (row + 1) * column; i++) {
+        sprintf(p, "%s ", dbr[i]); 
+        p += strlen(dbr[i]) + 1;
+    }
+    int status = FAILED;
+    if (row>0)
+        status = SUCCESS;
+    send_response(status, strlen(buf) + 1, buf);
+    release_dbr(dbr);
 }

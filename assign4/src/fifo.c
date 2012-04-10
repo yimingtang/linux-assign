@@ -58,7 +58,7 @@ int connect_server() {
     if (close(public_fifo_fd) == -1)
         error_exit(1, "close file error" ,NULL);
 
-    fprintf(stderr, "opening fd...\n");
+    fprintf(stderr, "opening read_file...\n");
     read_file = fopen(name_r, "r");
     fprintf(stderr, "waiting for server...\n");
     fscanf(read_file, "%s", buf);

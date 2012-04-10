@@ -1,8 +1,8 @@
+#include <stdio.h>
+#include <string.h>
 #include "core.h"
 #include "defs.h"
 #include "error.h"
-#include <stdio.h>
-#include <string.h>
 #include "connection.h"
 
 static void handle_init();
@@ -12,6 +12,7 @@ static void handle_query();
 static void handle_exit();
 static void handle_order();
 static void handle_verified();
+static void handle_query_orders();
 
 static char get_choice();
 static void get_str(char * prompts, char * result);
@@ -40,6 +41,9 @@ void start_client() {
         break;
       case S_ORDER:
         handle_order();
+        break;
+      case S_QUERY_ORDER:
+        handle_query_orders();
         break;
       case S_QUERY:
         handle_query();
@@ -136,6 +140,25 @@ static void handle_query()
     char from_station[32];
     char to_station[32];
     fputs("\n================== QUERY ========================\n\n", stdout);
+    send_request(LIST_ALL, 0, NULL);
+    response * rs1 = recv_response();
+    if (rs1->status == SUCCESS) {    
+        char *data = strtok(rs1->result, " "); 
+        fprintf(stdout, "\tfrom\t\tto\n");
+        int count =1;
+        while(data != NULL) {
+            fprintf(stdout, "\t%s", data);
+            if(count %2 ==0)
+                fputc('\n',stdout);
+            count ++;
+            data = strtok(NULL, " ");
+        }
+        fputc('\n',stdout);
+    }else{
+        error_msg("query error",NULL);
+    }
+
+    fputs("\n********* ONLY THE STATIONS LISTED IS AVAILABLE**********\n\n", stdout);
     get_str("from: ", from_station);
     get_str("to: ", to_station);
 
@@ -144,10 +167,10 @@ static void handle_query()
     params[1] = to_station;
 
     send_request(QUERY, 2, params);
-    response * rs = recv_response();
-    if (rs->status == SUCCESS) {
-        char *data = strtok(rs->result, " "); 
-        fprintf(stdout, "\tid\tform\t\tto\t\tprice\tdays_left\n");
+    response * rs2 = recv_response();
+    if (rs2->status == SUCCESS) {
+        char *data = strtok(rs2->result, " "); 
+        fprintf(stdout, "\n\tid\tform\t\tto\t\tprice\tdays_left\n");
         while(data != NULL) {
             fprintf(stdout, "\t%s", data);
             data = strtok(NULL, " ");
@@ -158,8 +181,32 @@ static void handle_query()
     }
 
     status = S_VERIFIED;
-    
 }
+
+
+static void handle_query_orders()
+{
+    fputs("\n================== QUERY  ORDERS====================\n\n", stdout);
+    send_request(QUERY_ORDER, 0, NULL);
+    response * rs = recv_response();
+    if (rs->status == SUCCESS) {
+        char *data = strtok(rs->result, " "); 
+        fprintf(stdout, "\tid\tfrom\t\tto\t\tprice\tusername\n");
+        int count = 1;
+        while(data != NULL) {
+            fprintf(stdout, "\t%s", data);
+            if(count % 5 == 0)
+                fputc('\n',stdout);
+            count ++;
+            data = strtok(NULL, " ");
+        }
+        fputc('\n',stdout);
+    }else{
+        error_msg("query error",NULL);
+    }
+    status = S_VERIFIED;
+}
+
 static void handle_exit()
 {
     fputs("\n================== EXIT ==========================\n\n", stdout);
@@ -187,9 +234,10 @@ static void handle_verified()
 {
     fputs("\n================== VERIFIED ======================\n\n", stdout);
     fputs("Welcome Back! Now, you can do the following things: \n", stdout);
-    fputs("    1. QUERY\n", stdout);
+    fputs("    1. QUERY TICKETS\n", stdout);
     fputs("    2. ORDER\n", stdout);
-    fputs("    3. EXIT\n", stdout);
+    fputs("    3. QUERY YOUR ORDER\n", stdout);
+    fputs("    4. EXIT\n", stdout);
     char c = get_choice();
     switch(c){
          case '1':
@@ -199,6 +247,9 @@ static void handle_verified()
             status = S_ORDER;
             break;
         case '3':
+            status = S_QUERY_ORDER;
+            break;
+        case '4':
             status = S_EXIT;
             break;
     }

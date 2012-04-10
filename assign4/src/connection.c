@@ -48,6 +48,7 @@ response * recv_response()
     if (resp.rs_len > 0) {
         resp.result = (char *)(malloc(sizeof(char) * resp.rs_len));
         fread(resp.result, sizeof(char), resp.rs_len, read_file);
+        resp.result[resp.rs_len] = '\0';
     }
     __fpurge(read_file);
     return &resp;
@@ -67,5 +68,6 @@ request * recv_request()
         fscanf(read_file, "%s", buf_ptr);
         buf_ptr = buf_ptr + strlen(buf_ptr) + 1;
     }
+    __fpurge(read_file);
     return &req;
 }

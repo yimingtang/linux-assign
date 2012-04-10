@@ -105,4 +105,22 @@ bool db_ticket_order(int id)
     return true;
 }
 
+bool db_query_orders(char *** dbr, int * nrow, int * ncolumn)
+{
+    char sql[512];
+    char * errmsg;
+    sprintf(sql, "select ticket_order.id, ticket.from_station, ticket.to_station, ticket.price, user.username from user, ticket, ticket_order where ticket.id = ticket_order.ticket_id and user.id = ticket_order.user_id and user.id = %d;", user_id);
+    sqlite3_get_table(db, sql, dbr, nrow, ncolumn, &errmsg);
+    return true;
+}
+
+bool db_list_all_tickets(char *** dbr, int * nrow, int * ncolumn)
+{
+    char sql[128];
+    char * errmsg;
+    sprintf(sql, "select from_station, to_station from ticket");
+    sqlite3_get_table(db, sql, dbr, nrow, ncolumn, &errmsg);
+    return true;
+}
+
 

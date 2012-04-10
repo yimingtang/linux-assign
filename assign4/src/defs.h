@@ -14,6 +14,8 @@ typedef enum {
     QUERY,
     ORDER,
     DISCONNECT,
+    QUERY_ORDER,
+    LIST_ALL
 } request_type;
 
 /*

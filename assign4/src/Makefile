@@ -6,8 +6,8 @@ CLIENT_DIR=client
 SERV_TARGET=server.out
 CLIENT_TARGET=client.out
 
-CLIENT_OBJS = error.o  $(CLIENT_DIR)/client.o  $(CLIENT_DIR)/core.o  fifo.o connection.o
-SERVER_OBJS = error.o  $(SERV_DIR)/server.o fifo.o connection.o $(SERV_DIR)/transaction.o $(SERV_DIR)/database.o 
+CLIENT_OBJS = error.o  $(CLIENT_DIR)/client.o  $(CLIENT_DIR)/core.o  socket.o connection.o
+SERVER_OBJS = error.o  $(SERV_DIR)/server.o socket.o connection.o $(SERV_DIR)/transaction.o $(SERV_DIR)/database.o 
 
 all: clean server.out client.out
 	
@@ -21,8 +21,8 @@ core.o: $(CLIENT_DIR)/core.c
 	$(CC) $(CFLAGS) $< -o core.o
 error.o: error.c
 	$(CC) $(CFLAGS) $< -o error.o
-fifo.o: fifo.c
-	$(CC) $(CFLAGS) $< -o fifo.o
+fifo.o: socket.c
+	$(CC) $(CFLAGS) $< -o socket.o
 server.o:$(SERV_DIR)/server.c
 	$(CC) $(CFLAGS) $< -o server.o
 connection.o:connection.c

@@ -15,9 +15,10 @@
 int init_server();
 
 /*
- * connect to the server, and dup file descriptors
+ * listen on public fifo, if there's a connection, set up
  */
 int listen_client(int fd);
+
 /*
  * setup connection between client and server, dup file descriptors
  */

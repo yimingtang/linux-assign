@@ -10,7 +10,8 @@ typedef enum
 	S_VERIFIED,
 	S_ORDER,
 	S_QUERY,
-	S_EXIT
+	S_EXIT,
+	S_QUERY_ORDER
 }C_Status;
 
 void start_client();
